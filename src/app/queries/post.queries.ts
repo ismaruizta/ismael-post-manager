@@ -1,52 +1,43 @@
 import { PageQueryOptions } from "../interfaces/post.interfaces"
 import { gql } from 'apollo-angular';
 
-export function getPostQuery(id: number) {
-  return gql`{
-    post(id: ${id}) {
-      id
-      title
-      body
-    }
-  }`
-}
 
 export const GET_POSTS = gql`
-  query posts($options: PageQueryOptions) {
+  query getPosts($options: PageQueryOptions) {
     posts(options: $options) {
+      meta {
+        totalCount
+      }
       data {
         id
         title
         body
       }
-      meta {
-        totalCount
-      }
     }
   }
 `;
 
-export const CREATE_POST_MUTATION = gql`
-mutation CreatePost($input: CreatePostInput!) {
-  createPost(input: $input) {
-    id
-    title
-    body
+export const CREATE_POST = gql`
+  mutation createPost($input: CreatePostInput!) {
+    createPost(input: $input) {
+      id
+      title
+      body
+    }
   }
-}
 `;
-export const UPDATE_POST_MUTATION = gql`
-mutation (
-  $id: ID!,
-  $input: UpdatePostInput!
-) {
-  updatePost(id: $id, input: $input) {
-    id
-    body
+
+export const UPDATE_POST = gql`
+  mutation updatePost($id: ID!, $input: UpdatePostInput!) {
+    updatePost(id: $id, input: $input) {
+      id
+      title
+      body
+    }
   }
-}
 `;
-export const DELETE_POST_MUTATION = gql`
+
+export const DELETE_POST = gql`
 mutation (
   $id: ID!
 ) {
@@ -56,11 +47,21 @@ mutation (
 
 export function getPaginateOptions(page: number, limit: number): PageQueryOptions {
   return {
-      options: {
-        paginate: {
-          page: page,
-          limit: limit
-        }
+    options: {
+      paginate: {
+        page: page,
+        limit: limit
       }
+    }
   }
+}
+
+export function getPostQuery(id: number) {
+  return gql`{
+    post(id: ${id}) {
+      id
+      title
+      body
+    }
+  }`
 }

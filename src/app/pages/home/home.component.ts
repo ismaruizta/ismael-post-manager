@@ -1,8 +1,10 @@
 import { Component, OnInit } from '@angular/core';
-import { Apollo, QueryRef } from 'apollo-angular';
-import { from, map, Observable, of, pipe } from 'rxjs';
-import { PageQueryOptions, Post } from 'src/app/interfaces/post.interfaces';
-import { PostServiceService } from 'src/app/services/post-items.service';
+import { Observable } from 'rxjs';
+import { FormMode } from 'src/app/enums/form-mode.enum';
+import { NewPost, Post, PostState } from 'src/app/interfaces/post.interfaces';
+import { Store } from '@ngrx/store';
+import { addPost, deletePost, loadPosts, updatePost } from 'src/app/actions/post.actions';
+import { selectAllPosts } from 'src/app/stores/post.store';
 
 @Component({
   selector: 'app-home',
@@ -10,72 +12,50 @@ import { PostServiceService } from 'src/app/services/post-items.service';
   styleUrls: ['./home.component.scss']
 })
 export class HomeComponent implements OnInit {
-  page:number;
-  limit:number;
-  queryRef!: QueryRef<any>;
-  posts!: Post[];
+  page:number = 1;
+  limit:number = 3;
+  posts$: Observable<Post[]>  = this.store.select(selectAllPosts);
+  editPost: Post | null = null;
+  mode: FormMode = FormMode.NEW;
   
-  constructor( private postItemService:PostServiceService ){
-    this.page = 1;
-    this.limit = 50;
-  }
+  constructor( private store: Store<PostState> ){}
 
   ngOnInit(): void {
-    this.queryRef = this.postItemService.getPosts( this.page, this.limit);
-    this.setPosts();
+    this.store.dispatch(loadPosts({page: this.page, limit:this.limit}));
   }
 
-  setPosts(){
-    this.queryRef.valueChanges.pipe(
-      map((result) => result.data.posts.data)
-    ).subscribe((data:any)=> this.posts = data );
+  handleSetPost( post:NewPost|Post ){
+    if( this.mode === FormMode.NEW ){
+      this.store.dispatch(addPost({post:post as NewPost}))
+    }else if( this.mode === FormMode.EDIT){
+      this.store.dispatch(updatePost({post:post as Post}))
+    }
   }
 
-  newPost(){
-    this.postItemService.createPost().subscribe((data:any)=>{
-      console.log(data);
-    })
+  clearPost(){
+    this.editPost = null
+    this.mode = FormMode.NEW;
   }
 
   handleDelete( id: number ){
-    this.postItemService.deletePost( id ).pipe(map((result)=>result.data))
-    .subscribe((data:any)=>{
-      // TODO - handle posts
-    })
+    this.store.dispatch(deletePost({id}))
   }
 
+  handleEdit( post:Post ){
+    this.editPost = post;
+    this.mode = FormMode.EDIT;
+  }
 
-  updatePost(){
-    this.postItemService.updatePost().subscribe((data:any)=>{
-      console.log(data);
-    })
+  handleSetMode( mode:FormMode ){
+    this.mode = mode;
   }
 
   hasMore(){
-    return this.queryRef.getLastResult().data.posts.meta.totalCount > this.page * this.limit;
+    // TODO
+    return false;
   }
 
   loadMore(){
-    if ( this.hasMore() ) {
-      const options: PageQueryOptions = {
-          options: {
-            paginate: {
-              page: this.page + 1,
-              limit: this.limit,
-            },
-          },
-      };
-
-      this.queryRef.fetchMore({
-        variables:{
-          ...options
-        }
-      }).then(( result )=>{
-        this.page ++;
-        const data = result.data;
-        const newPosts = data.posts.data;
-        this.posts = [...this.posts, ...newPosts]
-      })
-    }
+    // TODO
   }
 }

@@ -5,8 +5,12 @@
     <div class="card-body">
         <h5 class="card-title">{{post.title}}</h5>
         <p class="card-text">{{post.body}}</p>
-        <a class="btn btn-primary" (click)="updateItem()">edit</a>
-        <a class="btn btn-primary" (click)="deleteItem()">delete</a>
+    </div>
+    <div class="card-footer">
+        <div class="d-grid gap-2 d-md-flex justify-content-md-end">
+            <button class="btn btn-warning me-md-2" type="button" (click)="updateItem()">Edit</button>
+            <button class="btn btn-danger" type="button" (click)="deleteItem()">Delete</button>
+        </div>
     </div>
 
 </div>

@@ -6,13 +6,17 @@ import { AppComponent } from './app.component';
 import { HeaderComponent } from './components/header/header.component';
 import { PostItemComponent } from './components/post-item/post-item.component';
 import { HomeComponent } from './pages/home/home.component';
-import { PostComponent } from './pages/post/post.component';
-import { FormComponent } from './pages/form/form.component';
+import { InfoComponent } from './pages/info/info.component';
 import { GraphQLModule } from './graphql.module';
-import { HttpClientModule } from '@angular/common/http';
-import { PostServiceService } from 'src/app/services/post-items.service';
+import { HttpClientModule, HTTP_INTERCEPTORS } from '@angular/common/http';
 import { FormsModule } from '@angular/forms';
-import { PostFormComponent } from './post-form/post-form.component';
+import { StoreModule } from '@ngrx/store';
+import { EffectsModule } from '@ngrx/effects';
+import { PostFormComponent } from './components/post-form/post-form.component';
+import { HttpInterceptorService } from './services/http-interceptor.service';
+import { SpinnerComponent } from './components/spinner/spinner.component';
+import { postReducer } from './reducers/post.reducers';
+import { PostEffects } from './effects/post.effects';
 
 @NgModule({
   declarations: [
@@ -20,18 +24,24 @@ import { PostFormComponent } from './post-form/post-form.component';
     HeaderComponent,
     PostItemComponent,
     HomeComponent,
-    PostComponent,
-    FormComponent,
-    PostFormComponent
+    InfoComponent,
+    PostFormComponent,
+    SpinnerComponent
   ],
   imports: [
     BrowserModule,
     AppRoutingModule,
     GraphQLModule,
     HttpClientModule,
-    FormsModule
+    FormsModule,
+    StoreModule.forRoot({ posts: postReducer }),
+    EffectsModule.forRoot([PostEffects])
   ],
-  providers: [],
+  providers: [{
+    provide: HTTP_INTERCEPTORS,
+    useClass: HttpInterceptorService,
+    multi: true
+  }],
   bootstrap: [AppComponent]
 })
 export class AppModule { }

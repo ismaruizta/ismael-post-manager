@@ -1,8 +1,25 @@
-<p>home works!</p>
-<post-form></post-form>
-<div class="post-wrapper" *ngIf="posts">
-    <div *ngFor="let post of posts">
-        <post-item [post]="post" (deletePost)="handleDelete($event)"></post-item>
+<div *ngIf="mode === 'NEW'" class="new-post-wrapper">
+    <post-form (setPost)="handleSetPost($event)"></post-form>
+</div>
+
+<div *ngIf="mode === 'EDIT' && editPost" class="edit-post-wrapper">
+    <post-form 
+        [mode]="mode"
+        [id]="editPost.id"
+        [body]="editPost.body"
+        [title]="editPost.title"
+        (setMode)="handleSetMode($event)"
+        (setPost)="handleSetPost($event)"></post-form>
+</div>
+
+<div class="posts-wrapper mt-5">
+    <h2>Post List</h2>
+    <div *ngFor="let post of posts$ | async">
+        <post-item [post]="post" 
+            (editPost)="handleEdit($event)"
+            (deletePost)="handleDelete($event)"></post-item>
     </div>
-    <button *ngIf="hasMore()" (click)="loadMore()">Load More</button>
+    <div class="more mt-3 mb-3">
+        <button type="submit" class="btn btn-primary" *ngIf="hasMore()" (click)="loadMore()">Load more</button>
+    </div>
 </div>

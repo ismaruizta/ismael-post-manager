@@ -1,0 +1,18 @@
+<h2 *ngIf="mode == 'NEW'">New Post</h2>
+<h2 *ngIf="mode == 'EDIT'">Edit Post</h2>
+<form (ngSubmit)="onSubmit()">
+    <div class="mb-3">
+      <label for="titleInput" class="form-label">Title</label>
+      <input [(ngModel)]="title" name="title" type="text" class="form-control" id="titleInput" aria-describedby="title">
+    </div>
+    <div class="mb-3">
+      <label for="bodyInput" class="form-label">Body</label>
+      <textarea class="form-control" name="body" [(ngModel)]="body" id="bodyInput" aria-label="With textarea"></textarea>
+    </div>
+    
+    <div class="d-grid gap-2 d-md-flex justify-content-md-start">
+      <button *ngIf="mode == 'NEW'" type="submit" class="btn btn-success me-md-2">Create Post</button>
+      <button *ngIf="mode == 'EDIT'" type="submit" class="btn btn-warning me-md-2">Edit Post</button>
+      <button (click)="handleClear()" type="button" class="btn btn-primary">Clear</button>
+  </div>
+  </form>

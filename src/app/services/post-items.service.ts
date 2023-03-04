@@ -1,13 +1,13 @@
 import { Injectable } from '@angular/core';
 import { Apollo, gql } from 'apollo-angular';
 import { EmptyObject } from 'apollo-angular/types';
-import { PageQueryOptions, Post } from '../interfaces/post.interfaces';
-import { CREATE_POST_MUTATION, DELETE_POST_MUTATION, getPaginateOptions, getPostQuery, GET_POSTS, UPDATE_POST_MUTATION } from '../queries/post.queries';
+import { NewPost, PageQueryOptions, Post } from '../interfaces/post.interfaces';
+import { CREATE_POST, DELETE_POST, getPaginateOptions, getPostQuery, GET_POSTS, UPDATE_POST } from '../queries/post.queries';
 
 @Injectable({
     providedIn: 'root'
 })
-export class PostServiceService {
+export class PostService {
 
     constructor(private apollo: Apollo) { }
 
@@ -30,32 +30,33 @@ export class PostServiceService {
 
     deletePost( id:number ) {
         return this.apollo.mutate({
-            mutation: DELETE_POST_MUTATION,
+            mutation: DELETE_POST,
             variables: {
                 id
             },
         })
     }
 
-    updatePost() {
+    updatePost( id:string, post:Post) {
         return this.apollo.mutate({
-            mutation: UPDATE_POST_MUTATION,
+            mutation: UPDATE_POST,
             variables: {
-                "id": 1,
+                "id": id,
                 "input": {
-                    "body": "Some updated content."
+                    "body": post.body,
+                    "title": post.title
                 }
             }
         })
     }
 
-    createPost() {
+    createPost( post:NewPost ) {
         return this.apollo.mutate({
-            mutation: CREATE_POST_MUTATION,
+            mutation: CREATE_POST,
             variables: {
                 input: {
-                    title: 'New Post Title',
-                    body: 'New post body text'
+                    title: post.title,
+                    body: post.body
                 }
             }
         })
