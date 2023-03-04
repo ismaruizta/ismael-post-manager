@@ -1,0 +1,8 @@
+<p>home works!</p>
+<post-form></post-form>
+<div class="post-wrapper" *ngIf="posts">
+    <div *ngFor="let post of posts">
+        <post-item [post]="post" (deletePost)="handleDelete($event)"></post-item>
+    </div>
+    <button *ngIf="hasMore()" (click)="loadMore()">Load More</button>
+</div>

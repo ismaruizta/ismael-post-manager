@@ -1,0 +1,26 @@
+Task: 
+
+- Create an Angular project with https://the-guild.dev/graphql/apollo-angular 
+- Show a list of posts from this https://graphqlzero.almansi.me/ 
+- Create a form to write a new post 
+- Place a couple of buttons on each post so they could be updated (using previous form) or deleted 
+
+
+Looking for usage: 
+
+- Angular (latest versions) 
+- Apollo and GraphQL 
+- OnPush change detection strategy and reactive templates 
+- RxJS: We use it extensively, we need to see solid operator usage 
+- NGRX: Even if it’s a small test, we want to see how you can manage a CRUD with it 
+- CSS vars and utility classes to prevent creating components with bloated css code 
+- Directives? Pipes? Show us what you can do with them 
+
+
+Important: 
+
+- Clean/readable code 
+- Feel free to use a css library like Tailwind or Bootstrap 
+
+
+

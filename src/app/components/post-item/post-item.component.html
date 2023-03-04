@@ -1,0 +1,12 @@
+<div class="card text-center mt-3">
+    <div class="card-header">
+        Post {{post.id}}
+    </div>
+    <div class="card-body">
+        <h5 class="card-title">{{post.title}}</h5>
+        <p class="card-text">{{post.body}}</p>
+        <a class="btn btn-primary" (click)="updateItem()">edit</a>
+        <a class="btn btn-primary" (click)="deleteItem()">delete</a>
+    </div>
+
+</div>
